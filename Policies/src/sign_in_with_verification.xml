@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_sign_in_with_verification" PublicPolicyUri="http://__TenantName__/B2C_1A_sign_in_with_verification" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <BasePolicy>
+    <TenantId>__TenantName__</TenantId>
+    <PolicyId>B2C_1A_extension</PolicyId>
+  </BasePolicy>
+  <UserJourneys>
+    <UserJourney Id="SignInWithVerification">
+      <OrchestrationSteps>
+        <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
+          <ClaimsProviderSelections>
+            <ClaimsProviderSelection ValidationClaimsExchangeId="SelfAsserted-LocalAccount-Login-WithoutRegistrationLink" />
+          </ClaimsProviderSelections>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-Login-WithoutRegistrationLink" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-Login-WithoutRegistrationLink" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-GetUserByUserId" TechnicalProfileReferenceId="AccountStore-GetUserByUserId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="3" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>emailVerified</Value>
+              <Value>True</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-EmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-EmailVerification" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>emailVerified</Value>
+              <Value>True</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetEmailVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetEmailVerified" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="5" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>phoneVerified</Value>
+              <Value>True</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-PhoneVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-PhoneVerification" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="6" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>phoneVerified</Value>
+              <Value>True</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetPhoneVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetPhoneVerified" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="7" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+      </OrchestrationSteps>
+    </UserJourney>
+  </UserJourneys>
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignInWithVerification" />
+    <TechnicalProfile Id="SignInWithVerification">
+      <DisplayName>Relying Party</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="userId" PartnerClaimType="uid" />
+        <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="email" />
+        <OutputClaim ClaimTypeReferenceId="emailVerified" PartnerClaimType="email_verified" />
+        <OutputClaim ClaimTypeReferenceId="phone" PartnerClaimType="phone_number" />
+        <OutputClaim ClaimTypeReferenceId="phoneVerified" PartnerClaimType="phone_number_verified" />
+        <OutputClaim ClaimTypeReferenceId="policyId" PartnerClaimType="pid" DefaultValue="{Policy:PolicyId}" AlwaysUseDefaultValue="true" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="uid" />
+    </TechnicalProfile>
+  </RelyingParty>
+</TrustFrameworkPolicy>

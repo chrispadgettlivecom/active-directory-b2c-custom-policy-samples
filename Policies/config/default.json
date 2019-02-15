@@ -1,0 +1,15 @@
+{
+  "iefAuthenticationApplication": {
+    "clientId": ""
+  },
+  "iefAuthenticationProxyApplication": {
+    "clientId": ""
+  },
+  "iefExtensionApplication": {
+    "id": "",
+    "clientId": ""
+  },
+  "tenant": {
+    "name": ""
+  }
+}

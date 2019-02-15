@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_extension" PublicPolicyUri="http://__TenantName__/B2C_1A_extension" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <BasePolicy>
+    <TenantId>__TenantName__</TenantId>
+    <PolicyId>B2C_1A_base</PolicyId>
+  </BasePolicy>
+  <BuildingBlocks>
+    <ClaimsSchema>
+      <ClaimType Id="applicationId">
+        <DisplayName>Application Identifier</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+      <ClaimType Id="policyId">
+        <DisplayName>Policy Identifier</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+      <ClaimType Id="subjectId">
+        <DisplayName>Subject Identifier</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+    </ClaimsSchema>
+    <ClaimsTransformations>
+      <ClaimsTransformation Id="CreatePairwiseSubjectIdClaim" TransformationMethod="Hash">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="userId" TransformationClaimType="plaintext" />
+          <InputClaim ClaimTypeReferenceId="applicationId" TransformationClaimType="salt" />
+        </InputClaims>
+        <InputParameters>
+          <InputParameter Id="randomizerSecret" DataType="string" Value="B2C_1A_HashSecret" />
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="subjectId" TransformationClaimType="hash" />
+        </OutputClaims>
+      </ClaimsTransformation>
+      <ClaimsTransformation Id="CreatePublicSubjectIdClaim" TransformationMethod="FormatStringClaim">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="userId" TransformationClaimType="inputClaim" />
+        </InputClaims>
+        <InputParameters>
+          <InputParameter Id="stringFormat" DataType="string" Value="{0}" />
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="subjectId" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+    </ClaimsTransformations>
+  </BuildingBlocks>
+  <ClaimsProviders>
+    <ClaimsProvider>
+      <DisplayName>Account Store</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="AccountStore-Common">
+          <Metadata>
+            <Item Key="ApplicationObjectId">__IEFExtensionApplication_Id__</Item>
+            <Item Key="ClientId">__IEFExtensionApplication_ClientId__</Item>
+          </Metadata>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+    <ClaimsProvider>
+      <DisplayName>Claims Transformations</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="ClaimsTransformations-CreatePairwiseSubjectIdClaim">
+          <DisplayName>Create Subject Claim Claims Transformation</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.ClaimsTransformationProtocolProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
+          </Metadata>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="applicationId" DefaultValue="{OIDC:ClientId}" AlwaysUseDefaultValue="true" />
+            <OutputClaim ClaimTypeReferenceId="subjectId" />
+          </OutputClaims>
+          <OutputClaimsTransformations>
+            <OutputClaimsTransformation ReferenceId="CreatePairwiseSubjectIdClaim" />
+          </OutputClaimsTransformations>
+        </TechnicalProfile>
+        <TechnicalProfile Id="ClaimsTransformations-CreatePublicSubjectIdClaim">
+          <DisplayName>Create Subject Claim Claims Transformation</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.ClaimsTransformationProtocolProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="subjectId" />
+          </OutputClaims>
+          <OutputClaimsTransformations>
+            <OutputClaimsTransformation ReferenceId="CreatePublicSubjectIdClaim" />
+          </OutputClaimsTransformations>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+    <ClaimsProvider>
+      <DisplayName>Local Account</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="LocalAccount-OpenIdConnect">
+          <Metadata>
+            <Item Key="client_id">__IEFAuthenticationProxyApplication_ClientId__</Item>
+            <Item Key="IdTokenAudience">__IEFAuthenticationApplication_ClientId__</Item>
+          </Metadata>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="clientId" PartnerClaimType="client_id" DefaultValue="__IEFAuthenticationProxyApplication_ClientId__" AlwaysUseDefaultValue="true" />
+            <InputClaim ClaimTypeReferenceId="resource" PartnerClaimType="resource" DefaultValue="__IEFAuthenticationApplication_ClientId__" AlwaysUseDefaultValue="true" />
+          </InputClaims>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+  </ClaimsProviders>
+</TrustFrameworkPolicy>

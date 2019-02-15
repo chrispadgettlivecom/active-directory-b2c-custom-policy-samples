@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_sign_up_without_verification" PublicPolicyUri="http://__TenantName__/B2C_1A_sign_up_without_verification" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <BasePolicy>
+    <TenantId>__TenantName__</TenantId>
+    <PolicyId>B2C_1A_extension</PolicyId>
+  </BasePolicy>
+  <UserJourneys>
+    <UserJourney Id="SignUpWithoutVerification">
+      <OrchestrationSteps>
+        <OrchestrationStep Order="1" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-Registration-WithoutEmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-Registration-WithoutEmailVerification" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-GetUserByUserId" TechnicalProfileReferenceId="AccountStore-GetUserByUserId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="3" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+      </OrchestrationSteps>
+    </UserJourney>
+  </UserJourneys>
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpWithoutVerification" />
+    <TechnicalProfile Id="SignUpWithoutVerification">
+      <DisplayName>Relying Party</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="newUser" PartnerClaimType="new_user" />
+        <OutputClaim ClaimTypeReferenceId="userId" PartnerClaimType="uid" />
+        <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="email" />
+        <OutputClaim ClaimTypeReferenceId="emailVerified" PartnerClaimType="email_verified" />
+        <OutputClaim ClaimTypeReferenceId="phone" PartnerClaimType="phone_number" />
+        <OutputClaim ClaimTypeReferenceId="phoneVerified" PartnerClaimType="phone_number_verified" />
+        <OutputClaim ClaimTypeReferenceId="policyId" PartnerClaimType="pid" DefaultValue="{Policy:PolicyId}" AlwaysUseDefaultValue="true" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="uid" />
+    </TechnicalProfile>
+  </RelyingParty>
+</TrustFrameworkPolicy>

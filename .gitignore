@@ -1,0 +1,8 @@
+# Configuration files
+local.json
+
+# Dependency directories
+node_modules/
+
+# Distribution directories
+dist/
