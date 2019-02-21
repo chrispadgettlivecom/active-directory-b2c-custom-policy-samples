@@ -52,7 +52,7 @@
     <ClaimsProvider>
       <DisplayName>Account Store</DisplayName>
       <TechnicalProfiles>
-        <TechnicalProfile Id="AccountStore-Common">
+        <TechnicalProfile Id="AccountStore">
           <Metadata>
             <Item Key="ApplicationObjectId">__IEFExtensionApplication_Id__</Item>
             <Item Key="ClientId">__IEFExtensionApplication_ClientId__</Item>

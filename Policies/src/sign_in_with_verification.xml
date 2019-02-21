@@ -12,10 +12,10 @@
       <OrchestrationSteps>
         <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
           <ClaimsProviderSelections>
-            <ClaimsProviderSelection ValidationClaimsExchangeId="SelfAsserted-LocalAccount-Login-WithoutRegistrationLink" />
+            <ClaimsProviderSelection ValidationClaimsExchangeId="SelfAsserted-LocalAccount-LoginWithoutRegistrationLink" />
           </ClaimsProviderSelections>
           <ClaimsExchanges>
-            <ClaimsExchange Id="SelfAsserted-LocalAccount-Login-WithoutRegistrationLink" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-Login-WithoutRegistrationLink" />
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-LoginWithoutRegistrationLink" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-LoginWithoutRegistrationLink" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="2" Type="ClaimsExchange">
@@ -25,6 +25,10 @@
         </OrchestrationStep>
         <OrchestrationStep Order="3" Type="ClaimsExchange">
           <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>email</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
               <Value>emailVerified</Value>
               <Value>True</Value>
@@ -37,6 +41,10 @@
         </OrchestrationStep>
         <OrchestrationStep Order="4" Type="ClaimsExchange">
           <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>email</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
               <Value>emailVerified</Value>
               <Value>True</Value>
@@ -49,6 +57,10 @@
         </OrchestrationStep>
         <OrchestrationStep Order="5" Type="ClaimsExchange">
           <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>phone</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
               <Value>phoneVerified</Value>
               <Value>True</Value>
@@ -61,6 +73,10 @@
         </OrchestrationStep>
         <OrchestrationStep Order="6" Type="ClaimsExchange">
           <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>phone</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
               <Value>phoneVerified</Value>
               <Value>True</Value>
