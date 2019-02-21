@@ -12,7 +12,7 @@
       <OrchestrationSteps>
         <OrchestrationStep Order="1" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="SelfAsserted-LocalAccount-Registration-WithoutEmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-Registration-WithoutEmailVerification" />
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-RegistrationByEmailAndPhone" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-RegistrationByEmailAndPhone" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="2" Type="ClaimsExchange">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_sign_up_sign_in" PublicPolicyUri="http://__TenantName__/B2C_1A_sign_up_sign_in" 
+<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_phone_sign_up_any_sign_in" PublicPolicyUri="http://__TenantName__/B2C_1A_phone_sign_up_any_sign_in" 
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -13,14 +13,14 @@
       <TechnicalProfiles>
         <TechnicalProfile Id="SelfAsserted-LocalAccount-LoginWithRegistrationLink">
           <Metadata>
-            <Item Key="SignUpTarget">SelfAsserted-LocalAccount-RegistrationByEmailAndPhone</Item>
+            <Item Key="SignUpTarget">SelfAsserted-LocalAccount-RegistrationByPhone</Item>
           </Metadata>
         </TechnicalProfile>
       </TechnicalProfiles>
     </ClaimsProvider>
   </ClaimsProviders>
   <UserJourneys>
-    <UserJourney Id="SignUpOrSignIn">
+    <UserJourney Id="PhoneSignUpOrAnySignIn">
       <OrchestrationSteps>
         <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
           <ClaimsProviderSelections>
@@ -38,7 +38,7 @@
             </Precondition>
           </Preconditions>
           <ClaimsExchanges>
-            <ClaimsExchange Id="SelfAsserted-LocalAccount-RegistrationByEmailAndPhone" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-RegistrationByEmailAndPhone" />
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-RegistrationByPhone" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-RegistrationByPhone" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="3" Type="ClaimsExchange">
@@ -48,8 +48,31 @@
         </OrchestrationStep>
         <OrchestrationStep Order="4" Type="ClaimsExchange">
           <Preconditions>
-            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
-              <Value>email</Value>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>signInNameTypeIsEmailAddress</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="ClaimsTransformations-CompareSignInNameValueAndEmailClaims" TechnicalProfileReferenceId="ClaimsTransformations-CompareSignInNameValueAndEmailClaims" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="5" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>signInNameTypeIsPhoneNumber</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="ClaimsTransformations-CompareSignInNameValueAndPhoneClaims" TechnicalProfileReferenceId="ClaimsTransformations-CompareSignInNameValueAndPhoneClaims" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="6" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>signInNameTypeIsEmailAddress</Value>
+              <Value>False</Value>
               <Action>SkipThisOrchestrationStep</Action>
             </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
@@ -62,10 +85,11 @@
             <ClaimsExchange Id="SelfAsserted-LocalAccount-EmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-EmailVerification" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="5" Type="ClaimsExchange">
+        <OrchestrationStep Order="7" Type="ClaimsExchange">
           <Preconditions>
-            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
-              <Value>email</Value>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>signInNameTypeIsEmailAddress</Value>
+              <Value>False</Value>
               <Action>SkipThisOrchestrationStep</Action>
             </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
@@ -78,10 +102,11 @@
             <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetEmailVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetEmailVerified" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="6" Type="ClaimsExchange">
+        <OrchestrationStep Order="8" Type="ClaimsExchange">
           <Preconditions>
-            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
-              <Value>phone</Value>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>signInNameTypeIsPhoneNumber</Value>
+              <Value>False</Value>
               <Action>SkipThisOrchestrationStep</Action>
             </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
@@ -94,10 +119,11 @@
             <ClaimsExchange Id="SelfAsserted-LocalAccount-PhoneVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-PhoneVerification" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="7" Type="ClaimsExchange">
+        <OrchestrationStep Order="9" Type="ClaimsExchange">
           <Preconditions>
-            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
-              <Value>phone</Value>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>signInNameTypeIsPhoneNumber</Value>
+              <Value>False</Value>
               <Action>SkipThisOrchestrationStep</Action>
             </Precondition>
             <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
@@ -110,13 +136,13 @@
             <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetPhoneVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetPhoneVerified" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="8" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+        <OrchestrationStep Order="10" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
       </OrchestrationSteps>
     </UserJourney>
   </UserJourneys>
   <RelyingParty>
-    <DefaultUserJourney ReferenceId="SignUpOrSignIn" />
-    <TechnicalProfile Id="SignUpOrSignIn">
+    <DefaultUserJourney ReferenceId="PhoneSignUpOrAnySignIn" />
+    <TechnicalProfile Id="RelyingParty-PhoneSignUpOrAnySignIn">
       <DisplayName>Relying Party</DisplayName>
       <Protocol Name="OpenIdConnect" />
       <OutputClaims>
