@@ -55,12 +55,11 @@ module.exports = function (context, req) {
     const passwordHash = hash.digest("hex").toUpperCase();
     const passwordHashPrefix = passwordHash.slice(0, 5);
     const passwordHashSuffix = passwordHash.slice(5);
-    const userAgent = getEnvironmentVariable("HIBP_API_USER_AGENT");
 
     request.get({
         url: `https://api.pwnedpasswords.com/range/${encodeURIComponent(passwordHashPrefix)}`,
         headers: {
-            "User-Agent": userAgent
+            "User-Agent": getEnvironmentVariable("HIBP_API_USER_AGENT")
         }
     }, function (err, response, responseBody) {
         if (err || !isSuccessStatusCode(response.statusCode)) {
