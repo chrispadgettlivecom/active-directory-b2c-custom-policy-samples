@@ -4,14 +4,6 @@ function createBadRequestResponse() {
     return createResponse(400);
 }
 
-function createConflictResponse(userMessage) {
-    return createResponse(409, {
-        "version": "1.0.0",
-        "status": 409,
-        "userMessage": userMessage
-    });
-}
-
 function createInternalServerErrorResponse() {
     return createResponse(500);
 }
@@ -42,26 +34,27 @@ function isSuccessStatusCode(statusCode) {
 }
 
 module.exports = function (context, req) {
-    if (!req.body || !req.body.account) {
+    if (!req.body || !req.body.email) {
         context.res = createBadRequestResponse();
         context.done();
         return;
     }
 
-    request.get({
-        url: `https://haveibeenpwned.com/api/v2/breachedaccount/${encodeURIComponent(req.body.account)}`,
-        headers: {
-            "User-Agent": getEnvironmentVariable("HIBP_API_USER_AGENT")
+    request.post({
+        url: `${getEnvironmentVariable("MAILGUN_API_BASE_URL")}/messages`,
+        auth: {
+            user: "api",
+            pass: getEnvironmentVariable("MAILGUN_API_KEY")
+        },
+        form: {
+            "from": getEnvironmentVariable("MAILGUN_FROM_MAIL_ADDRESS"),
+            "to": getEnvironmentVariable("MAILGUN_TO_MAIL_ADDRESS"),
+            "subject": "User Registered",
+            "text": `A new user '${req.body.email}' has registered.`
         }
     }, function (err, response) {
-        if (err || (!isSuccessStatusCode(response.statusCode) && response.statusCode !== 404)) {
+        if (err || !isSuccessStatusCode(response.statusCode)) {
             context.res = createInternalServerErrorResponse();
-            context.done();
-            return;
-        }
-
-        if (response.statusCode === 200) {
-            context.res = createConflictResponse("This registration attempt has been blocked because the user account that you're using has been disclosed through a data breach.");
             context.done();
             return;
         }
