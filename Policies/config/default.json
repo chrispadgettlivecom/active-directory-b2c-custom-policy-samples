@@ -1,4 +1,8 @@
 {
+  "functionApp": {
+    "baseUrl": "",
+    "key": ""
+  },
   "iefAuthenticationApplication": {
     "clientId": ""
   },

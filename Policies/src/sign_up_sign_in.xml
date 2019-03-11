@@ -116,7 +116,7 @@
   </UserJourneys>
   <RelyingParty>
     <DefaultUserJourney ReferenceId="SignUpOrSignIn" />
-    <TechnicalProfile Id="SignUpOrSignIn">
+    <TechnicalProfile Id="RelyingParty-SignUpOrSignIn">
       <DisplayName>Relying Party</DisplayName>
       <Protocol Name="OpenIdConnect" />
       <OutputClaims>

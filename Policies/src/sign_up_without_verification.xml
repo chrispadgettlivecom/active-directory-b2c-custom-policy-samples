@@ -26,7 +26,7 @@
   </UserJourneys>
   <RelyingParty>
     <DefaultUserJourney ReferenceId="SignUpWithoutVerification" />
-    <TechnicalProfile Id="SignUpWithoutVerification">
+    <TechnicalProfile Id="RelyingParty-SignUpWithoutVerification">
       <DisplayName>Relying Party</DisplayName>
       <Protocol Name="OpenIdConnect" />
       <OutputClaims>

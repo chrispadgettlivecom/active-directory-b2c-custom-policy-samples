@@ -93,7 +93,7 @@
   </UserJourneys>
   <RelyingParty>
     <DefaultUserJourney ReferenceId="SignInWithVerification" />
-    <TechnicalProfile Id="SignInWithVerification">
+    <TechnicalProfile Id="RelyingParty-SignInWithVerification">
       <DisplayName>Relying Party</DisplayName>
       <Protocol Name="OpenIdConnect" />
       <OutputClaims>
