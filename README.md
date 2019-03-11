@@ -5,6 +5,7 @@ This GitHub repository contains the following Azure Active Directory B2C custom 
 | Name                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **sign_up_sign_in**              | **Sign-up** for a local account using an e-mail address *and* a phone number. The end user is prompted for verification of the e-mail address and the phone number. **Sign-in** for a local account using an e-mail address *or* a phone number. If the e-mail address hasn't been verified, then the end user is prompted for verification of the e-mail address. If the phone number hasn't been verified, then the end user is prompted for verification of the phone number.                                             |
+| **sign_up_with_hibp**            | **Sign-up** for a local account using an e-mail address. The e-mail address and password are checked against [Have I Been Pwned (HIBP)](https://haveibeenpwned.com/) for whether they have been disclosed through a data breach. The end user is prompted for verification of the e-mail address.                                                                                                                                                                                                                            |
 | **sign_up_without_verification** | **Sign-up** for a local account using an e-mail address *and* a phone number. The end user is *not* prompted for verification of the e-mail address or the phone number.                                                                                                                                                                                                                                                                                                                                                     |
 | **sign_in_with_verification**    | **Sign-in** for a local account using an e-mail address *or* a phone number. If the e-mail address hasn't been verified, then the end user is prompted for verification of the e-mail address. If the phone number hasn't been verified, then the end user is prompted for verification of the phone number.                                                                                                                                                                                                                 |
 | **email_sign_up_any_sign_in**    | **Sign-up** for a local account using an e-mail address. The end user is prompted for verification of the e-mail address. A phone number can be linked to the local account using the **phone_linking** policy. **Sign-in** for a local account using an e-mail address *or* a phone number. If the e-mail address hasn't been verified, then the end user is prompted for verification of the e-mail address. If the phone number hasn't been verified, then the end user is prompted for verification of the phone number. |
@@ -77,9 +78,14 @@ gulp build
 
    1. B2C_1A_base.xml
    2. B2C_1A_extension.xml
-   3. B2C_1A_sign_up_sign_in.xml
-   4. B2C_1A_sign_up_without_verification.xml
-   5. B2C_1A_sign_in_with_verification.xml
+   3. B2C_1A_email_linking.xml
+   4. B2C_1A_email_sign_up_any_sign_in.xml
+   5. B2C_1A_phone_linking.xml
+   6. B2C_1A_phone_sign_up_any_sign_in.xml
+   7. B2C_1A_sign_in_with_verification.xml
+   8. B2C_1A_sign_up_sign_in.xml
+   9. B2C_1A_sign_up_with_hibp.xml
+   10. B2C_1A_sign_up_without_verification.xml
 
 ### Test the custom policies
 

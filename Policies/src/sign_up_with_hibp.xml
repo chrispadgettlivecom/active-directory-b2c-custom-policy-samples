@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_sign_up_with_hibp" PublicPolicyUri="http://__TenantName__/B2C_1A_sign_up_with_hibp" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <BasePolicy>
+    <TenantId>__TenantName__</TenantId>
+    <PolicyId>B2C_1A_extension</PolicyId>
+  </BasePolicy>
+  <ClaimsProviders>
+    <ClaimsProvider>
+      <DisplayName>Azure Functions</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="AzureFunctions-CheckBreachedAccount">
+          <DisplayName>Check Breached Account Azure Function</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">__FunctionApp_BaseUrl__/CheckBreachedAccountHttpTrigger?code=__FunctionApp_Key__</Item>
+            <Item Key="AuthenticationType">None</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+            <Item Key="AllowInsecureAuthInProduction">true</Item>
+          </Metadata>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="email" PartnerClaimType="account" />
+          </InputClaims>
+        </TechnicalProfile>
+        <TechnicalProfile Id="AzureFunctions-CheckPwnedPassword">
+          <DisplayName>Check Pwned Password Azure Function</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">__FunctionApp_BaseUrl__/CheckPwnedPasswordHttpTrigger?code=__FunctionApp_Key__</Item>
+            <Item Key="AuthenticationType">None</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+            <Item Key="AllowInsecureAuthInProduction">true</Item>
+          </Metadata>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="newPassword" PartnerClaimType="password" />
+          </InputClaims>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+    <ClaimsProvider>
+      <DisplayName>Self-Asserted</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="SelfAsserted-LocalAccount-RegistrationByEmail">
+          <ValidationTechnicalProfiles>
+            <ValidationTechnicalProfile ReferenceId="AzureFunctions-CheckBreachedAccount" />
+            <ValidationTechnicalProfile ReferenceId="AzureFunctions-CheckPwnedPassword" />
+          </ValidationTechnicalProfiles>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+  </ClaimsProviders>
+  <UserJourneys>
+    <UserJourney Id="SignUpWithHibp">
+      <OrchestrationSteps>
+        <OrchestrationStep Order="1" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-RegistrationByEmail" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-RegistrationByEmail" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-GetUserByUserId" TechnicalProfileReferenceId="AccountStore-GetUserByUserId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="3" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-EmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-EmailVerification" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetEmailVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetEmailVerified" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="5" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+      </OrchestrationSteps>
+    </UserJourney>
+  </UserJourneys>
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpWithHibp" />
+    <TechnicalProfile Id="RelyingParty-SignUpWithHibp">
+      <DisplayName>Relying Party</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="newUser" PartnerClaimType="new_user" />
+        <OutputClaim ClaimTypeReferenceId="userId" PartnerClaimType="uid" />
+        <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="email" />
+        <OutputClaim ClaimTypeReferenceId="emailVerified" PartnerClaimType="email_verified" />
+        <OutputClaim ClaimTypeReferenceId="phone" PartnerClaimType="phone_number" />
+        <OutputClaim ClaimTypeReferenceId="phoneVerified" PartnerClaimType="phone_number_verified" />
+        <OutputClaim ClaimTypeReferenceId="policyId" PartnerClaimType="pid" DefaultValue="{Policy:PolicyId}" AlwaysUseDefaultValue="true" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="uid" />
+    </TechnicalProfile>
+  </RelyingParty>
+</TrustFrameworkPolicy>

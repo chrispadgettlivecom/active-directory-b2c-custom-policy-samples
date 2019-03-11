@@ -25,24 +25,10 @@ function build(cb) {
     .pipe(replace('__IEFExtensionApplication_ClientId__', config.iefExtensionApplication.clientId))
     .pipe(gulp.dest(distPath));
 
-  // ---------- Build the relying party sign-up or sign-in file ---------- //
+  // ---------- Build the relying party email linking file ---------- //
 
-  gulp.src(['./src/sign_up_sign_in.xml'])
-    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_up_sign_in.xml`))
-    .pipe(replace('__TenantName__', config.tenant.name))
-    .pipe(gulp.dest(distPath));
-
-  // ---------- Build the relying party sign-up without verification file ---------- //
-
-  gulp.src(['./src/sign_up_without_verification.xml'])
-    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_up_without_verification.xml`))
-    .pipe(replace('__TenantName__', config.tenant.name))
-    .pipe(gulp.dest(distPath));
-
-  // ---------- Build the relying party sign-in with verification file ---------- //
-
-  gulp.src(['./src/sign_in_with_verification.xml'])
-    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_in_with_verification.xml`))
+  gulp.src(['./src/email_linking.xml'])
+    .pipe(rename(`${config.tenant.name}_B2C_1A_email_linking.xml`))
     .pipe(replace('__TenantName__', config.tenant.name))
     .pipe(gulp.dest(distPath));
 
@@ -53,6 +39,13 @@ function build(cb) {
     .pipe(replace('__TenantName__', config.tenant.name))
     .pipe(gulp.dest(distPath));
 
+  // ---------- Build the relying party phone linking file ---------- //
+
+  gulp.src(['./src/phone_linking.xml'])
+    .pipe(rename(`${config.tenant.name}_B2C_1A_phone_linking.xml`))
+    .pipe(replace('__TenantName__', config.tenant.name))
+    .pipe(gulp.dest(distPath));
+
   // ---------- Build the relying party phone sign-up or any sign-in file ---------- //
 
   gulp.src(['./src/phone_sign_up_any_sign_in.xml'])
@@ -60,19 +53,35 @@ function build(cb) {
     .pipe(replace('__TenantName__', config.tenant.name))
     .pipe(gulp.dest(distPath));
 
-    // ---------- Build the relying party email linking file ---------- //
-  
-    gulp.src(['./src/email_linking.xml'])
-      .pipe(rename(`${config.tenant.name}_B2C_1A_email_linking.xml`))
-      .pipe(replace('__TenantName__', config.tenant.name))
-      .pipe(gulp.dest(distPath));
-  
-    // ---------- Build the relying party phone linking file ---------- //
-  
-    gulp.src(['./src/phone_linking.xml'])
-      .pipe(rename(`${config.tenant.name}_B2C_1A_phone_linking.xml`))
-      .pipe(replace('__TenantName__', config.tenant.name))
-      .pipe(gulp.dest(distPath));
+  // ---------- Build the relying party sign-in with verification file ---------- //
+
+  gulp.src(['./src/sign_in_with_verification.xml'])
+    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_in_with_verification.xml`))
+    .pipe(replace('__TenantName__', config.tenant.name))
+    .pipe(gulp.dest(distPath));
+
+  // ---------- Build the relying party sign-up or sign-in file ---------- //
+
+  gulp.src(['./src/sign_up_sign_in.xml'])
+    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_up_sign_in.xml`))
+    .pipe(replace('__TenantName__', config.tenant.name))
+    .pipe(gulp.dest(distPath));
+
+  // ---------- Build the relying party sign-up with Have I Been Pwned (HIBP) file ---------- //
+
+  gulp.src(['./src/sign_up_with_hibp.xml'])
+    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_up_with_hibp.xml`))
+    .pipe(replace('__TenantName__', config.tenant.name))
+    .pipe(replace('__FunctionApp_BaseUrl__', config.functionApp.baseUrl))
+    .pipe(replace('__FunctionApp_Key__', config.functionApp.key))
+    .pipe(gulp.dest(distPath));
+
+  // ---------- Build the relying party sign-up without verification file ---------- //
+
+  gulp.src(['./src/sign_up_without_verification.xml'])
+    .pipe(rename(`${config.tenant.name}_B2C_1A_sign_up_without_verification.xml`))
+    .pipe(replace('__TenantName__', config.tenant.name))
+    .pipe(gulp.dest(distPath));
 
   cb();
 }
