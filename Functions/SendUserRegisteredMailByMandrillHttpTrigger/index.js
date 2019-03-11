@@ -41,16 +41,20 @@ module.exports = function (context, req) {
     }
 
     request.post({
-        url: `${getEnvironmentVariable("MAILGUN_API_BASE_URL")}/messages`,
-        auth: {
-            user: "api",
-            pass: getEnvironmentVariable("MAILGUN_API_KEY")
-        },
+        url: "https://mandrillapp.com/api/1.0/messages/send.json",
         form: {
-            from: getEnvironmentVariable("MAILGUN_FROM_MAIL_ADDRESS"),
-            to: getEnvironmentVariable("MAILGUN_TO_MAIL_ADDRESS"),
-            subject: "User Registered",
-            text: `A new user '${req.body.email}' has registered.`
+            key: getEnvironmentVariable("MANDRILL_API_KEY"),
+            message: {
+                text: `A new user '${req.body.email}' has registered.`,
+                subject: "User Registered",
+                from_email: getEnvironmentVariable("MANDRILL_FROM_MAIL_ADDRESS"),
+                to: [
+                    {
+                        email: getEnvironmentVariable("MANDRILL_TO_MAIL_ADDRESS"),
+                        type: "to"
+                    }
+                ]
+            }
         }
     }, function (err, response) {
         if (err || !isSuccessStatusCode(response.statusCode)) {

@@ -85,6 +85,15 @@ function build(cb) {
     .pipe(replace('__FunctionApp_Key__', config.functionApp.key))
     .pipe(gulp.dest(distPath));
 
+    // ---------- Build the relying party sign-up with Mandrill file ---------- //
+  
+    gulp.src(['./src/sign_up_with_mandrill.xml'])
+      .pipe(rename(`${config.tenant.name}_B2C_1A_sign_up_with_mandrill.xml`))
+      .pipe(replace('__TenantName__', config.tenant.name))
+      .pipe(replace('__FunctionApp_BaseUrl__', config.functionApp.baseUrl))
+      .pipe(replace('__FunctionApp_Key__', config.functionApp.key))
+      .pipe(gulp.dest(distPath));
+
   // ---------- Build the relying party sign-up without verification file ---------- //
 
   gulp.src(['./src/sign_up_without_verification.xml'])
