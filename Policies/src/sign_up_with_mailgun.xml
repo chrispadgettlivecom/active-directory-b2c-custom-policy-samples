@@ -37,22 +37,22 @@
         </OrchestrationStep>
         <OrchestrationStep Order="2" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="AccountStore-GetUserByUserId" TechnicalProfileReferenceId="AccountStore-GetUserByUserId" />
+            <ClaimsExchange Id="AzureFunctions-SendUserRegisteredMailByMailgunHttpTrigger" TechnicalProfileReferenceId="AzureFunctions-SendUserRegisteredMailByMailgunHttpTrigger" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="3" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="SelfAsserted-LocalAccount-EmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-EmailVerification" />
+            <ClaimsExchange Id="AccountStore-GetUserByUserId" TechnicalProfileReferenceId="AccountStore-GetUserByUserId" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="4" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetEmailVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetEmailVerified" />
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-EmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-EmailVerification" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="5" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="AzureFunctions-SendUserRegisteredMailByMailgunHttpTrigger" TechnicalProfileReferenceId="AzureFunctions-SendUserRegisteredMailByMailgunHttpTrigger" />
+            <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetEmailVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetEmailVerified" />
           </ClaimsExchanges>
         </OrchestrationStep>
         <OrchestrationStep Order="6" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
