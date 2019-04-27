@@ -6,6 +6,7 @@ This GitHub repository contains the following Azure Active Directory B2C custom 
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **sign_up_sign_in**              | **Sign-up** for a local account using an e-mail address *and* a phone number. The end user is prompted for verification of the e-mail address and the phone number. **Sign-in** for a local account using an e-mail address *or* a phone number. If the e-mail address hasn't been verified, then the end user is prompted for verification of the e-mail address. If the phone number hasn't been verified, then the end user is prompted for verification of the phone number.                                             |
 | **sign_up_with_hibp**            | **Sign-up** for a local account using an e-mail address. The e-mail address and password are checked against [Have I Been Pwned (HIBP)](https://haveibeenpwned.com/) for whether they have been disclosed through a data breach. The end user is prompted for verification of the e-mail address.                                                                                                                                                                                                                            |
+| **sign_up_with_keen**            | **Sign-up** for a local account using an e-mail address. The end user is prompted for verification of the e-mail address. A registration event about the new user is published to [Keen](https://keen.io/).                                                                                                                                                                                                                                                                                                                  |
 | **sign_up_with_mailgun**         | **Sign-up** for a local account using an e-mail address. The end user is prompted for verification of the e-mail address. An e-mail notification about the new user is sent through [Mailgun](https://www.mailgun.com/).                                                                                                                                                                                                                                                                                                     |
 | **sign_up_with_mandrill**        | **Sign-up** for a local account using an e-mail address. The end user is prompted for verification of the e-mail address. An e-mail notification about the new user is sent through [Mandrill](https://mandrill.com/).                                                                                                                                                                                                                                                                                                       |
 | **sign_up_with_sendgrid**        | **Sign-up** for a local account using an e-mail address. The end user is prompted for verification of the e-mail address. An e-mail notification about the new user is sent through [SendGrid](https://sendgrid.com/).                                                                                                                                                                                                                                                                                                       |
@@ -88,10 +89,11 @@ gulp build
    7. B2C_1A_sign_in_with_verification.xml
    8. B2C_1A_sign_up_sign_in.xml
    9. B2C_1A_sign_up_with_hibp.xml
-   10. B2C_1A_sign_up_with_mailgun.xml
-   11. B2C_1A_sign_up_with_mandrill.xml
-   12. B2C_1A_sign_up_with_sendgrid.xml
-   13. B2C_1A_sign_up_without_verification.xml
+   10. B2C_1A_sign_up_with_keen.xml
+   11. B2C_1A_sign_up_with_mailgun.xml
+   12. B2C_1A_sign_up_with_mandrill.xml
+   13. B2C_1A_sign_up_with_sendgrid.xml
+   14. B2C_1A_sign_up_without_verification.xml
 
 ### Test the custom policies
 
