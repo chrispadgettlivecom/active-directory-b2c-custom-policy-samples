@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TrustFrameworkPolicy PolicySchemaVersion="0.3.0.0" TenantId="__TenantName__" PolicyId="B2C_1A_sign_up_with_keen" PublicPolicyUri="http://__TenantName__/B2C_1A_sign_up_with_keen" 
+  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <BasePolicy>
+    <TenantId>__TenantName__</TenantId>
+    <PolicyId>B2C_1A_extension</PolicyId>
+  </BasePolicy>
+  <BuildingBlocks>
+    <ClaimsSchema>
+      <ClaimType Id="ipAddress">
+        <DisplayName>IP Address</DisplayName>
+        <DataType>string</DataType>
+      </ClaimType>
+    </ClaimsSchema>
+  </BuildingBlocks>
+  <ClaimsProviders>
+    <ClaimsProvider>
+      <DisplayName>Azure Functions</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="AzureFunctions-SendUserRegisteredEventToKeenHttpTrigger">
+          <DisplayName>Send User Registered Event To Keen Azure Function</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ServiceUrl">__FunctionApp_BaseUrl__/SendUserRegisteredEventToKeenHttpTrigger?code=__FunctionApp_Key__</Item>
+            <Item Key="AuthenticationType">None</Item>
+            <Item Key="SendClaimsIn">Body</Item>
+            <Item Key="AllowInsecureAuthInProduction">true</Item>
+            <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
+          </Metadata>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="applicationId" PartnerClaimType="clientId" DefaultValue="{OIDC:ClientId}" AlwaysUseDefaultValue="true" />
+            <InputClaim ClaimTypeReferenceId="policyId" PartnerClaimType="policyId" DefaultValue="{Policy:PolicyId}" AlwaysUseDefaultValue="true" />
+            <InputClaim ClaimTypeReferenceId="ipAddress" PartnerClaimType="requestIp" DefaultValue="{Context:IPAddress}" AlwaysUseDefaultValue="true" />
+            <InputClaim ClaimTypeReferenceId="userId" PartnerClaimType="userId" />
+            <InputClaim ClaimTypeReferenceId="email" PartnerClaimType="userEmail" />
+            <InputClaim ClaimTypeReferenceId="phone" PartnerClaimType="userPhoneNumber" />
+          </InputClaims>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+  </ClaimsProviders>
+  <UserJourneys>
+    <UserJourney Id="SignUpWithKeen">
+      <OrchestrationSteps>
+        <OrchestrationStep Order="1" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-RegistrationByEmail" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-RegistrationByEmail" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="2" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AzureFunctions-SendUserRegisteredEventToKeenHttpTrigger" TechnicalProfileReferenceId="AzureFunctions-SendUserRegisteredEventToKeenHttpTrigger" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="3" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-GetUserByUserId" TechnicalProfileReferenceId="AccountStore-GetUserByUserId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-LocalAccount-EmailVerification" TechnicalProfileReferenceId="SelfAsserted-LocalAccount-EmailVerification" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="5" Type="ClaimsExchange">
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AccountStore-UpdateUserByUserId-SetEmailVerified" TechnicalProfileReferenceId="AccountStore-UpdateUserByUserId-SetEmailVerified" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="6" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+      </OrchestrationSteps>
+    </UserJourney>
+  </UserJourneys>
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpWithKeen" />
+    <TechnicalProfile Id="RelyingParty-SignUpWithKeen">
+      <DisplayName>Relying Party</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="newUser" PartnerClaimType="new_user" />
+        <OutputClaim ClaimTypeReferenceId="userId" PartnerClaimType="uid" />
+        <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="email" />
+        <OutputClaim ClaimTypeReferenceId="emailVerified" PartnerClaimType="email_verified" />
+        <OutputClaim ClaimTypeReferenceId="phone" PartnerClaimType="phone_number" />
+        <OutputClaim ClaimTypeReferenceId="phoneVerified" PartnerClaimType="phone_number_verified" />
+        <OutputClaim ClaimTypeReferenceId="policyId" PartnerClaimType="pid" DefaultValue="{Policy:PolicyId}" AlwaysUseDefaultValue="true" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="uid" />
+    </TechnicalProfile>
+  </RelyingParty>
+</TrustFrameworkPolicy>
